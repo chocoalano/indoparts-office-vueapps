@@ -1,28 +1,45 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-main>
+      <router-view />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import { mapGetters,mapActions } from 'vuex';
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  computed: {
+    ...mapGetters(['isAuth'])
+  },
+  watch: {
+    isAuth(nv) {
+      if (nv) {
+        this.getUserLogin().then((res) => {
+          if (res.status != 200) {
+            localStorage.setItem('token', null)
+            this.$store.commit('SET_TOKEN', null, { root: true })
+            this.$router.push({ name: "auth" });
+          }else{
+            this.$router.push({ name: "home" });
+          }
+        })
+      }
+    }
+  },
+  mounted() {
+    if (this.isAuth) {
+      this.getUserLogin().then((res) => {
+        if (res.status != 200) {
+          localStorage.setItem('token', null)
+          this.$store.commit('SET_TOKEN', null, { root: true })
+        }
+      })
+    }
+  },
+  methods: {
+    ...mapActions('auth', ['getUserLogin'])
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
