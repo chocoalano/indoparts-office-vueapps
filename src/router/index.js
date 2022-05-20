@@ -34,6 +34,15 @@ const router = new Router({
                 title: 'Home'
             }
         },
+        {
+            path: '/apps',
+            name: 'apps',
+            component: () => import('../views/apps'),
+            meta: {
+                requiresAuth: true,
+                title: 'Home'
+            }
+        },
     ]
 });
 router.beforeEach((to, from, next) => {

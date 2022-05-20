@@ -1,12 +1,16 @@
 import $axios from '../api'
 
 const state = () => ({
-    authenticated: []
+    authenticated: [],
+    UserOnline:[]
 })
 
 const mutations = {
     ASSIGN_USER_AUTH(state, payload) {
         state.authenticated = payload
+    },
+    ASSIGN_USER_ONLINE(state, payload) {
+        state.UserOnline = payload
     },
 }
 
@@ -45,7 +49,7 @@ const actions = {
                 })
         })
     },
-    logout() {
+    logout({commit}) {
         return new Promise((resolve) => {
             $axios.get(`logout`)
                 .then((response) => {
@@ -75,6 +79,18 @@ const actions = {
         return new Promise((resolve) => {
             $axios.get(`data-auth-form`)
                 .then((response) => {
+                    resolve(response)
+                })
+                .catch((error) => {
+                    resolve(error.response)
+                })
+        })
+    },
+    UserLoginList({commit}) {
+        return new Promise((resolve) => {
+            $axios.get(`list-user-login`)
+                .then((response) => {
+                    commit('ASSIGN_USER_ONLINE', response.data)
                     resolve(response)
                 })
                 .catch((error) => {

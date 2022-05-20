@@ -5,3 +5,38 @@
 .v-application .rounded-br-xl {
     border-bottom-right-radius: 300px !important;
 }
+
+.v-tab.withoutupercase {
+    text-transform: none !important;
+}
+
+.v-tabs {
+    width: 50% !important;
+}
+
+.v-btn.withoutupercase {
+    text-transform: none !important;
+}
+
+.three {
+    width: 50px;
+    height: 50px;
+}
+
+.four {
+    width: 50px;
+    height: 25px;
+    background: black;
+}
+
+.five {
+    width: 50px;
+    height: 25px;
+    background: #042a0f;
+}
+
+.six {
+    width: 50px;
+    height: 25px;
+    background: #2c2107;
+}

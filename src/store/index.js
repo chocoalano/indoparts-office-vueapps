@@ -3,6 +3,10 @@ import Vuex from 'vuex'
 
 import auth from './modules/auth'
 import users from './modules/users'
+import roles from './modules/roles'
+import depts from './modules/depts'
+import permission from './modules/permission'
+import rolepermission from './modules/rolepermission'
 
 Vue.use(Vuex)
 
@@ -14,6 +18,8 @@ export default new Vuex.Store({
     isMobile: false,
     leftdrawer: true,
     rightdrawer: true,
+    socketConnected: false,
+    socketMessage: []
   },
   getters: {
     isAuth: state => {
@@ -21,6 +27,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    SET_SOCKET_CONNECT(state, payload) {
+      state.socketConnected = payload
+    },
+    SET_SOCKET_MSG(state, payload) {
+      state.socketMessage = payload
+    },
     SET_ISMOBILE(state, payload) {
       state.isMobile = payload
     },
@@ -40,5 +52,9 @@ export default new Vuex.Store({
   modules: {
     auth,
     users,
+    roles,
+    depts,
+    permission,
+    rolepermission,
   }
 })

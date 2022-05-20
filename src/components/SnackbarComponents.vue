@@ -1,13 +1,22 @@
 <template>
     <v-snackbar
-      :timeout="-1"
       v-model="snackbar"
       :vertical="vertical"
-      left
-      shaped
+      color="deep-purple accent-4"
+      elevation="24"
+      right
       top
     >
       {{ text }}
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
     </v-snackbar>
 </template>
 <script>

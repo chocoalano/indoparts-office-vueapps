@@ -2,24 +2,12 @@ import $axios from '../api'
 
 const state = () => ({
     form: {
-        role_id: '',
-        dept_id: '',
-        nik: '',
-        name: '',
-        password: '',
-        password_confirmation: '',
-        activation: true,
-        avatar: []
+        rolename: '',
     },
     dialog: false,
     dialogDelete: false,
     headers: [
-        { text: 'Jabatan', value: 'roles.rolename', sortable: false,},
-        { text: 'Departemen', value: 'dept.deptname', sortable: false,},
-        { text: 'NIK', value: 'nik' },
-        { text: 'Nama', value: 'name', sortable: false,},
-        { text: 'Aktivasi', value: 'activation', sortable: false,},
-        { text: 'Avatar', value: 'avatar', sortable: false,},
+        { text: 'Jabatan', value: 'rolename', sortable: false,},
         { text: 'Actions', value: 'actions', sortable: false },
     ],
     search: '',
@@ -77,26 +65,12 @@ const mutations = {
     },
     SET_FORM(state, payload) {
         state.form = {
-            role_id: payload.role_id,
-            dept_id: payload.dept_id,
-            nik: payload.nik,
-            name: payload.name,
-            password: payload.password,
-            password_confirmation: payload.password_confirmation,
-            activation: payload.activation,
-            avatar: payload.avatar,
+            rolename: payload.rolename,
         }
     },
     CLEAR_FORM(state) {
         state.form = {
-            role_id: '',
-            dept_id: '',
-            nik: '',
-            name: '',
-            password: '',
-            password_confirmation: '',
-            activation: false,
-            avatar: [],
+            rolename: '',
         }
     }
 }
@@ -106,7 +80,7 @@ const actions = {
         return new Promise((resolve) => {
             commit('SET_LOADING', true)
             const { sortBy, sortDesc, page, itemsPerPage } = state.options
-            $axios.get(`/users?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${state.search}`)
+            $axios.get(`/role?page=${page}&limit=${itemsPerPage}&sortBy=${sortBy}&sortDesc=${sortDesc}&search=${state.search}`)
                 .then((response) => {
                     commit('SET_LOADING', false)
                     commit('SET_DESSERT', response.data.data)
@@ -121,17 +95,7 @@ const actions = {
     },
     store({ state, dispatch }) {
         return new Promise((resolve) => {
-            const form = state.form
-            let formData = new FormData();
-            formData.append("role_id", form.role_id);
-            formData.append("dept_id", form.dept_id);
-            formData.append("nik", form.nik);
-            formData.append("name", form.name);
-            formData.append("password", form.password);
-            formData.append("password_confirmation", form.password_confirmation);
-            formData.append("activation", form.activation);
-            formData.append("avatar", form.avatar);
-            $axios.post(`/users`, formData)
+            $axios.post(`/role`, state.form)
                 .then((response) => {
                     resolve(response)
                     dispatch('index')
@@ -143,19 +107,9 @@ const actions = {
     },
     edit({ state, commit }) {
         return new Promise((resolve) => {
-            $axios.get(`/users/${state.editedIndex}`)
+            $axios.get(`/role/${state.editedIndex}`)
                 .then((response) => {
-                    const newForm = {
-                        role_id: response.data.role_id,
-                        dept_id: response.data.dept_id,
-                        name: response.data.name,
-                        nik: response.data.nik,
-                        password: '',
-                        password_confirmation: '',
-                        activation: response.data.activation,
-                        avatar: [],
-                    }
-                    commit('SET_FORM', newForm)
+                    commit('SET_FORM', response.data)
                     resolve(response)
                 })
                 .catch((error) => {
@@ -165,17 +119,7 @@ const actions = {
     },
     update({ state, dispatch }) {
         return new Promise((resolve) => {
-            const form = state.form
-            let formData = new FormData();
-            formData.append("role_id", form.role_id);
-            formData.append("dept_id", form.dept_id);
-            formData.append("name", form.name);
-            formData.append("nik", form.nik);
-            formData.append("password", form.password);
-            formData.append("password_confirmation", form.password_confirmation);
-            formData.append("activation", form.activation);
-            formData.append("avatar", form.avatar);
-            $axios.put(`/users/${state.editedIndex}`, formData)
+            $axios.put(`/role/${state.editedIndex}`, state.form)
                 .then((response) => {
                     resolve(response)
                     dispatch('index')
@@ -187,7 +131,7 @@ const actions = {
     },
     destroy({ dispatch, state }) {
         return new Promise((resolve) => {
-            $axios.delete(`/users/${state.editedIndex}`)
+            $axios.delete(`/role/${state.editedIndex}`)
                 .then((response) => {
                     resolve(response)
                     dispatch('index')

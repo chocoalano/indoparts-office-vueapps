@@ -103,8 +103,8 @@
 </template>
 
 <script>
-import FormLogin from '@/components/FormLogin.vue';
-import FormRegist from '@/components/FormRegist';
+import FormLogin from '@/components/form/FormLogin.vue';
+import FormRegist from '@/components/form/FormRegist';
 import { mapState,mapGetters } from "vuex";
 export default {
   components: {

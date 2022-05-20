@@ -3,7 +3,7 @@
         <v-col cols="12" :md="md" :sm="sm" v-for="item in data" :key="item.id">
             <v-item>
                 <v-card :color="active === item.id ? 'primary' : ''" class="d-flex align-center rounded-xl" height="200"
-                    @click="active = item.id">
+                    @click="active = item.id,$emit('callback', { act: active })">
                     <v-row>
                         <v-col cols="12" sm="12">
                             <v-list-item three-line class="mt-10">

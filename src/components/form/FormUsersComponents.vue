@@ -5,8 +5,8 @@
                 outlined dense color="primary"></v-select>
             <v-select v-model="form.dept_id" item-text="deptname" item-value="id" :items="data_departemen"
                 label="Departemen" outlined dense color="primary"></v-select>
-            <v-text-field v-model="form.name" label="NIK" outlined dense color="primary" autocomplete="false" />
-            <v-text-field v-model="form.nik" label="Nama" outlined dense color="primary" autocomplete="false" />
+            <v-text-field v-model="form.nik" label="NIK" outlined dense color="primary" autocomplete="false" />
+            <v-text-field v-model="form.name" label="Nama" outlined dense color="primary" autocomplete="false" />
             <v-text-field v-model="form.password" label="Password" outlined dense color="primary" autocomplete="false"
                 prepend-inner-icon="mdi-shield-key" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'" counter @click:append="show1 = !show1" />
