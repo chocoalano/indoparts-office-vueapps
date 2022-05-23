@@ -1,5 +1,5 @@
 <template>
-    <v-data-table :headers="headers" :items="desserts" :options.sync="options" :server-items-length="totalDesserts"
+    <v-data-table v-if="$can('read-dept')" :headers="headers" :items="desserts" :options.sync="options" :server-items-length="totalDesserts"
         :loading="loading" sort-by="calories" class="elevation-1" v-model="selected" item-key="id" show-select>
         <template v-slot:top>
             <v-toolbar flat>
@@ -16,7 +16,7 @@
                 </v-text-field>
                 <v-dialog v-model="dialog" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn small outlined fab color="primary" class="mb-2" v-bind="attrs" v-on="on">
+                        <v-btn small outlined fab color="primary" class="mb-2" v-bind="attrs" v-on="on" v-if="$can('create-dept')">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
@@ -40,7 +40,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="dialogDelete" max-width="500px" v-if="$can('delete-dept')">
                     <v-card>
                         <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
                         <v-card-actions>
@@ -59,10 +59,10 @@
             </v-avatar>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item.id)">
+            <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-dept')">
                 mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item.id)">
+            <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-dept')">
                 mdi-delete
             </v-icon>
         </template>

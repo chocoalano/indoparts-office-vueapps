@@ -13,11 +13,7 @@
         right: 0;
         text-align: center;
       ">
-      <v-badge bordered color="primary" dot overlap class="mb-3">
-        <v-btn class="changewith">
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
-      </v-badge>
+      <notification-components />
       <br />
       <v-btn class="changewith" @click="signout">
         <v-icon>mdi-logout</v-icon>
@@ -27,10 +23,14 @@
 </template>
 
 <script>
-import { mapState,mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
+import NotificationComponents from '@/components/NotificationComponents';
 export default {
+  components:{
+    NotificationComponents
+  },
   computed: {
-    ...mapState(["rightdrawer"]),
+    ...mapState(["rightdrawer", "notif"]),
     rightdrawer: {
       get: function () {
         return this.$store.state.rightdrawer;
@@ -39,9 +39,14 @@ export default {
         this.$store.commit("SET_RIGHTDRAWER", value);
       },
     },
-    ...mapState("auth", {
-      authenticated: (state) => state.authenticated,
-    }),
+    notif: {
+      get: function () {
+        return this.$store.state.notif;
+      },
+      set: function (value) {
+        this.$store.commit("SET_NOTIF", value);
+      },
+    },
   },
   data: () => ({
     selectedItem: 0,
@@ -49,7 +54,7 @@ export default {
   methods: {
     ...mapActions('auth', ['logout']),
     signout() {
-      this.logout.then((e) => {
+      this.logout().then((e) => {
         if (e === 200 || e === 401) {
           this.$router.push({ name: "auth" });
         }

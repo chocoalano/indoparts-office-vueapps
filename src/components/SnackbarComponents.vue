@@ -1,18 +1,19 @@
 <template>
     <v-snackbar
-      v-model="snackbar"
-      :vertical="vertical"
-      color="deep-purple accent-4"
+      v-model="snackbarState.snackbar"
+      :timeout="3000"
+      :vertical="snackbarState.vertical"
+      :color="snackbarState.color"
       elevation="24"
       right
       top
     >
-      {{ text }}
+      {{ snackbarState.text }}
       <template v-slot:action="{ attrs }">
         <v-btn
           text
           v-bind="attrs"
-          @click="snackbar = false"
+          @click="snackbarState.snackbar = false"
         >
           Close
         </v-btn>
@@ -20,11 +21,18 @@
     </v-snackbar>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
-    props: {
-        snackbar: Boolean,
-        vertical: Boolean,
-        text: String,
+    computed: {
+        ...mapState(["snackbarState"]),
+        snackbarState: {
+            get: function () {
+                return this.$store.state.snackbarState;
+            },
+            set: function (value) {
+                this.$store.commit("SET_SNACKBAR", value);
+            },
+        }
     }
 }
 </script>

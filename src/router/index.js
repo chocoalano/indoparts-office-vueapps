@@ -43,6 +43,15 @@ const router = new Router({
                 title: 'Home'
             }
         },
+        {
+            path: '/notifikasi',
+            name: 'notifikasi',
+            component: () => import('../views/notifikasi'),
+            meta: {
+                requiresAuth: true,
+                title: 'Pemberitahuan'
+            }
+        },
     ]
 });
 router.beforeEach((to, from, next) => {

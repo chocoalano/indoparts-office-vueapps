@@ -9,9 +9,9 @@
       <v-app-bar flat>
         <v-tabs color="primary" v-model="tab">
           <v-tabs-slider color="primary"></v-tabs-slider>
-          <v-tab v-for="item in items" :key="item">
-            {{ item }}
-          </v-tab>
+          <v-tab v-text="'Master Data'" v-if="$can('read-user')||$can('read-role')||$can('read-dept')||$can('read-permission')||$can('read-keluhan-ga')" />
+          <v-tab v-text="'User Online'" />
+          <v-tab v-text="'Keluhan GA'" v-if="$can('read-keluhan-ga')" />
         </v-tabs>
       </v-app-bar>
       <v-divider></v-divider>
@@ -35,7 +35,6 @@ export default {
     tab: null,
     leftdrawer: true,
     rightdrawer: true,
-    items:['Master Data', 'Kontak Online', 'Data Keluhan GA']
   }),
   components: {
     AppBarComponents,

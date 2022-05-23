@@ -2,19 +2,23 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import socketio from 'socket.io-client';
-import VueSocketIO from 'vue-socket.io';
+import Permissions from './permission'
+import socketio from 'socket.io-client'
+import VueSocketIO from 'vue-socket.io'
 import vuetify from './plugins/vuetify'
+import infiniteScroll from 'vue-infinite-scroll'
 import "./assets/styles.scss";
 import { mapActions, mapState } from 'vuex'
 
 Vue.config.productionTip = false
 
+Vue.use(infiniteScroll)
 const SocketInstance = socketio.connect('http://localhost:3333');
 Vue.use(new VueSocketIO({
   debug: true,
   connection: SocketInstance
 }))
+Vue.mixin(Permissions)
 
 new Vue({
   router,
@@ -39,9 +43,6 @@ new Vue({
   mounted() {
     this.onResize()
     window.addEventListener('resize', this.onResize, { passive: true })
-    this.sockets.subscribe('news', (data) => {
-      this.$store.commit('SET_SOCKET_MSG', data)
-    });
   },
   computed: {
     ...mapState(['isMobile', 'baseUrl']),

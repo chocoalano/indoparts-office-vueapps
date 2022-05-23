@@ -1,14 +1,12 @@
 <template>
-    <v-data-table :headers="headers" :items="desserts" :options.sync="options" :server-items-length="totalDesserts"
+    <v-data-table v-if="$can('read-keluhan-ga')" :headers="headers" :items="desserts" :options.sync="options" :server-items-length="totalDesserts"
         :loading="loading" sort-by="calories" class="elevation-1" v-model="selected" item-key="id" show-select>
         <template v-slot:top>
             <v-toolbar flat>
-                <snackbar-components :snackbar="snackbar.snackbar" :vertical="snackbar.vertical" :text="snackbar.text">
-                </snackbar-components>
                 <v-toolbar-title>Master Data Karyawan</v-toolbar-title>
                 <v-divider class="mx-4" inset vertical></v-divider>
                 <v-switch v-model="singleSelect" class="mt-7"></v-switch>
-                <v-btn small outlined fab color="danger" @click="deletebatch">
+                <v-btn small outlined fab color="danger" @click="deletebatch" v-if="$can('delete-keluhan-ga')">
                     <v-icon>mdi-delete</v-icon>
                 </v-btn>
                 <v-spacer></v-spacer>
@@ -16,7 +14,7 @@
                 </v-text-field>
                 <v-dialog v-model="dialog" max-width="500px">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn small outlined fab color="primary" class="mb-2" v-bind="attrs" v-on="on">
+                        <v-btn small outlined fab color="primary" class="mb-2" v-bind="attrs" v-on="on" v-if="$can('create-keluhan-ga')">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                     </template>
@@ -26,7 +24,7 @@
                         </v-card-title>
 
                         <v-card-text>
-                            <form-users-components></form-users-components>
+                            <FormKeluhanGeneralAffairComponents/>
                         </v-card-text>
 
                         <v-card-actions>
@@ -40,7 +38,7 @@
                         </v-card-actions>
                     </v-card>
                 </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
+                <v-dialog v-model="dialogDelete" max-width="500px" v-if="$can('delete-keluhan-ga')">
                     <v-card>
                         <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
                         <v-card-actions>
@@ -53,16 +51,16 @@
                 </v-dialog>
             </v-toolbar>
         </template>
-        <template v-slot:[`item.avatar`]="{ item }">
+        <template v-slot:[`item.image`]="{ item }">
             <v-avatar size="40">
-                <v-img :src="`${baseUrl}/api/images/avatar-users/${item.avatar}`" class="image"></v-img>
+                <v-img :src="`${baseUrl}/api/images/foto-keluhan-ga/${item.image}`" class="image"></v-img>
             </v-avatar>
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item.id)">
+            <v-icon small class="mr-2" @click="editItem(item.id)" v-if="$can('update-keluhan-ga')">
                 mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item.id)">
+            <v-icon small @click="deleteItem(item.id)" v-if="$can('delete-keluhan-ga')">
                 mdi-delete
             </v-icon>
         </template>
@@ -71,11 +69,11 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import FormUsersComponents from '@/components/form/FormUsersComponents';
+import FormKeluhanGeneralAffairComponents from '@/components/form/FormKeluhanGeneralAffairComponents';
 import SnackbarComponents from '@/components/SnackbarComponents';
 export default {
     components: {
-        FormUsersComponents,
+        FormKeluhanGeneralAffairComponents,
         SnackbarComponents
     },
 
@@ -84,7 +82,7 @@ export default {
         formTitle() {
             return this.editedIndex === -1 ? 'New Data' : 'Edit Data'
         },
-        ...mapState("users", {
+        ...mapState("keluhan_ga", {
             search: (state) => state.search,
             dialog: (state) => state.dialog,
             dialogDelete: (state) => state.dialogDelete,
@@ -100,92 +98,84 @@ export default {
         }),
         search: {
             get: function () {
-                return this.$store.state.users.search;
+                return this.$store.state.keluhan_ga.search;
             },
             set: function (value) {
-                this.$store.commit("users/SET_SEARCH", value);
+                this.$store.commit("keluhan_ga/SET_SEARCH", value);
             },
         },
         dialog: {
             get: function () {
-                return this.$store.state.users.dialog;
+                return this.$store.state.keluhan_ga.dialog;
             },
             set: function (value) {
-                this.$store.commit("users/SET_DIALOG", value);
+                this.$store.commit("keluhan_ga/SET_DIALOG", value);
             },
         },
         dialogDelete: {
             get: function () {
-                return this.$store.state.users.dialogDelete;
+                return this.$store.state.keluhan_ga.dialogDelete;
             },
             set: function (value) {
-                this.$store.commit("users/SET_DIALOG_DELETE", value);
+                this.$store.commit("keluhan_ga/SET_DIALOG_DELETE", value);
             },
         },
         singleSelect: {
             get: function () {
-                return this.$store.state.users.singleSelect;
+                return this.$store.state.keluhan_ga.singleSelect;
             },
             set: function (value) {
-                this.$store.commit("users/SET_SINGLESELECT", value);
+                this.$store.commit("keluhan_ga/SET_SINGLESELECT", value);
             },
         },
         selected: {
             get: function () {
-                return this.$store.state.users.selected;
+                return this.$store.state.keluhan_ga.selected;
             },
             set: function (value) {
-                this.$store.commit("users/SET_SELECTED", value);
+                this.$store.commit("keluhan_ga/SET_SELECTED", value);
             },
         },
         totalDesserts: {
             get: function () {
-                return this.$store.state.users.totalDesserts;
+                return this.$store.state.keluhan_ga.totalDesserts;
             },
             set: function (value) {
-                this.$store.commit("users/SET_TOTALDESSERTS", value);
+                this.$store.commit("keluhan_ga/SET_TOTALDESSERTS", value);
             },
         },
         desserts: {
             get: function () {
-                return this.$store.state.users.desserts;
+                return this.$store.state.keluhan_ga.desserts;
             },
             set: function (value) {
-                this.$store.commit("users/SET_DESSERT", value);
+                this.$store.commit("keluhan_ga/SET_DESSERT", value);
             },
         },
         loading: {
             get: function () {
-                return this.$store.state.users.loading;
+                return this.$store.state.keluhan_ga.loading;
             },
             set: function (value) {
-                this.$store.commit("users/SET_LOADING", value);
+                this.$store.commit("keluhan_ga/SET_LOADING", value);
             },
         },
         options: {
             get: function () {
-                return this.$store.state.users.options;
+                return this.$store.state.keluhan_ga.options;
             },
             set: function (value) {
-                this.$store.commit("users/SET_OPTIONS", value);
+                this.$store.commit("keluhan_ga/SET_OPTIONS", value);
             },
         },
         editedIndex: {
             get: function () {
-                return this.$store.state.users.editedIndex;
+                return this.$store.state.keluhan_ga.editedIndex;
             },
             set: function (value) {
-                this.$store.commit("users/SET_INDEX", value);
+                this.$store.commit("keluhan_ga/SET_INDEX", value);
             },
-        },
-        snackbar: {
-            get: function () {
-                return this.$store.state.users.snackbar;
-            },
-            set: function (value) {
-                this.$store.commit("users/SET_SNACKBAR", value);
-            },
-        },
+        }
     },
 
     watch: {
@@ -207,22 +197,22 @@ export default {
     },
 
     methods: {
-        ...mapActions('users', ['index', 'store', 'edit', 'update', 'destroy']),
+        ...mapActions('keluhan_ga', ['index', 'store', 'edit', 'update', 'destroy']),
         getDataFromApi() {
             this.index(this.options)
         },
 
         editItem(item) {
-            this.$store.commit("users/SET_INDEX", parseInt(item));
+            this.$store.commit("keluhan_ga/SET_INDEX", parseInt(item));
             this.edit().then((res) => {
                 if (res.status === 200) {
-                    this.$store.commit("users/SET_DIALOG", true);
+                    this.$store.commit("keluhan_ga/SET_DIALOG", true);
                 }
             })
         },
 
         deleteItem(item) {
-            this.$store.commit("users/SET_INDEX", parseInt(item));
+            this.$store.commit("keluhan_ga/SET_INDEX", parseInt(item));
             this.dialogDelete = true
         },
         deletebatch() {
@@ -234,7 +224,7 @@ export default {
             if (dellact) {
                 const arr = this.selected
                 for (let i = 0; i < arr.length; i++) {
-                    this.$store.commit("users/SET_INDEX", parseInt(arr[i].id));
+                    this.$store.commit("keluhan_ga/SET_INDEX", parseInt(arr[i].id));
                     this.destroy()
                 }
             } else {
@@ -259,35 +249,13 @@ export default {
             if (this.editedIndex > -1) {
                 this.update().then((res) => {
                     if (res.status === 200) {
-                        this.snackbar = {
-                            snackbar: false,
-                            vertical: true,
-                            text: `${res.data} Data berhasil diperbaharui`,
-                        }
                         this.getDataFromApi()
-                    } else {
-                        this.snackbar = {
-                            snackbar: false,
-                            vertical: true,
-                            text: `${res.data} Data gagal diperbaharui!`,
-                        }
                     }
                 })
             } else {
-                this.store().then((res) => {
+                this.storeGA().then((res) => {
                     if (res.status === 200) {
-                        this.snackbar = {
-                            snackbar: false,
-                            vertical: true,
-                            text: `${res.data} Data berhasil ditambahkan`,
-                        }
                         this.getDataFromApi()
-                    } else {
-                        this.snackbar = {
-                            snackbar: false,
-                            vertical: true,
-                            text: `${res.data} Data gagal ditambahkan!`,
-                        }
                     }
                 })
             }
